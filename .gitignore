@@ -1,0 +1,24 @@
+#=== Build Artifacts (실행 파일 및 바이너리 제외) ===
+*.o
+*.so
+
+#=== IDE & Editors (개발 도구 설정 파일 제외) ===
+.vscode/
+.idea/
+*.swp
+*~
+
+#=== OS Generated Files (운영체제 생성 파일 제외) ===
+.DS_Store
+Thumbs.db
+
+#=== Temporary & Office Temporary Files (문서 임시 파일 제외) ===
+~$*.docx
+~$*.pptx
+*.tmp
+*.asf
+
+#=== 예외 처리 (만약 exec 폴더 구조 자체만 깃에 유지하고 싶다면 아래 주석 해제) ===
+!exec/client/.gitkeep
+!exec/server/.gitkeep
+!exec/lib/.gitkeep
