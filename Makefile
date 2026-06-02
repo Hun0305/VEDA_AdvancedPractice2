@@ -11,6 +11,7 @@ LIB_DIR = code/lib_src
 CLIENT_EXE = $(EXEC_DIR)/client/client_app
 SERVER_EXE = $(EXEC_DIR)/server/server_main
 LED_SO     = $(EXEC_DIR)/lib/libled.so
+BUZZER_SO = $(EXEC_DIR)/lib/libbuzzer.so
 
 # 기본 타겟 (make 또는 make all 입력 시 실행)
 # 이제 실행 파일뿐만 아니라 libs(즉, .so 파일)도 함께 빌드 타겟에 묶어줍니다.
@@ -18,7 +19,7 @@ all: directories $(CLIENT_EXE) $(SERVER_EXE) libs
 
 # 1. 필요한 exec 하위 디렉토리 자동 생성 (lib 폴더도 추가)
 directories:
-	@mkdir -p $(EXEC_DIR)/client $(EXEC_DIR)/server $(LIB_DIR)
+	@mkdir -p $(EXEC_DIR)/client $(EXEC_DIR)/server $(EXEC_DIR)/lib $(LIB_DIR)
 
 # 2. 클라이언트 빌드 (client_main.c 단일 컴파일)
 $(CLIENT_EXE): $(CODE_DIR)/client/client_main.c
@@ -29,7 +30,7 @@ $(SERVER_EXE): $(CODE_DIR)/server/server_main.c $(CODE_DIR)/server/tcp_handler.c
 	$(CC) $(CFLAGS) $^ -o $@ -ldl -lpthread
 
 # 4. 공유 라이브러리(.so) 빌드 타겟 추가
-libs: $(LED_SO)
+libs: $(LED_SO) $(BUZZER_SO)
 
 # libled.so 빌드 규칙
 # -fPIC (위치 독립 코드)와 -shared (공유 라이브러리) 옵션이 필수입니다.
@@ -37,8 +38,11 @@ libs: $(LED_SO)
 $(LED_SO): $(LIB_DIR)/led.c
 	$(CC) $(CFLAGS) -fPIC -shared $< -o $@ -lwiringPi
 
+$(BUZZER_SO): $(LIB_DIR)/buzzer.c
+	$(CC) $(CFLAGS) -fPIC -shared $< -o $@ -lwiringPi
+
 # 빌드된 파일 전체 삭제 (make clean)
 clean:
-	rm -rf $(EXEC_DIR)/client/* $(EXEC_DIR)/server/* $(LIB_DIR)/*
+	rm -rf $(EXEC_DIR)/client/* $(EXEC_DIR)/server/* $(EXEC_DIR)/lib/*
 
 .PHONY: all directories libs clean

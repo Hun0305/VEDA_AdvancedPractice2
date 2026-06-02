@@ -13,6 +13,25 @@ int server_fd = -1;
 
 void* device_command_thread(void* arg);
 
+void myThreadCreate(int command, int value) {
+    // 1. 스레드에게 줄 인자 메모리를 동적 할당 (malloc)
+    // ※ 그냥 지역변수로 주소를 넘기면, while루프가 돌면서 값이 바뀔 수 있어 위험합니다.
+    ThreadArgs* args = (ThreadArgs*)malloc(sizeof(ThreadArgs));
+    args->command = command;
+    args->value = value;
+
+    // 2. 스레드 생성
+    pthread_t thread_id;
+    if (pthread_create(&thread_id, NULL, device_command_thread, (void*)args) != 0) {
+        perror("[스레드 에러] 스레드 생성 실패");
+        free(args); // 생성 실패 시 메모리 해제
+    } else {
+        // 3. 스레드 분리 (Detach)
+        // 스레드가 종료되면 OS가 자원을 알아서 즉시 회수하도록 설정합니다. (pthread_join 생략 가능)
+        pthread_detach(thread_id);
+    }
+}
+
 // Ctrl+C (인터럽트) 발생 시 안전하게 소켓을 닫고 종료하기 위한 시그널 핸들러
 void handle_sigint(int sig) {
     (void)sig; // 사용하지 않는 매개변수 경고 방지
@@ -105,30 +124,16 @@ int main() {
                     case CMD_LED_OFF:
                     case CMD_SET_BRIGHT: {
                         printf("LED 관련 명령 수신 (Command: %d, Value: %d)\n", packet.command, packet.value);
-                        
-                        // 1. 스레드에게 줄 인자 메모리를 동적 할당 (malloc)
-                        // ※ 그냥 지역변수로 주소를 넘기면, while루프가 돌면서 값이 바뀔 수 있어 위험합니다.
-                        ThreadArgs* args = (ThreadArgs*)malloc(sizeof(ThreadArgs));
-                        args->command = packet.command;
-                        args->value = packet.value;
-
-                        // 2. 스레드 생성
-                        pthread_t thread_id;
-                        if (pthread_create(&thread_id, NULL, device_command_thread, (void*)args) != 0) {
-                            perror("[스레드 에러] 스레드 생성 실패");
-                            free(args); // 생성 실패 시 메모리 해제
-                        } else {
-                            // 3. 스레드 분리 (Detach)
-                            // 스레드가 종료되면 OS가 자원을 알아서 즉시 회수하도록 설정합니다. (pthread_join 생략 가능)
-                            pthread_detach(thread_id);
-                        }
+                        myThreadCreate(packet.command, packet.value);
                         break;
                     }
                     case CMD_BUZZER_ON:
                         printf("부저 켜기 멜로디 재생 명령\n");
+                        myThreadCreate(packet.command, packet.value);
                         break;
                     case CMD_BUZZER_OFF:
                         printf("부저 끄기 명령\n");
+                        myThreadCreate(packet.command, packet.value);
                         break;
                     case CMD_SENSOR_ON:
                         printf("조도센서 감시 시작 명령\n");

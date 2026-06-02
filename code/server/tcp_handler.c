@@ -14,11 +14,12 @@ void handle_device_command(int command, int value) {
     if (command == CMD_LED_ON || command == CMD_LED_OFF || command == CMD_SET_BRIGHT) {
         lib_path = "exec/lib/libled.so";
     }
-    /* 추후 다른 장치 구현 시 추가 영역
+    
+    //추후 다른 장치 구현 시 추가 영역
     else if (command == CMD_BUZZER_ON || command == CMD_BUZZER_OFF) {
-        lib_path = "../lib/libbuzzer.so";
+        lib_path = "exec/lib/libbuzzer.so";
     }
-    */
+    
 
     if (lib_path == NULL) return; // 제어 대상 장치가 아니거나 EXIT 등인 경우 예외처리
 
@@ -47,7 +48,7 @@ void handle_device_command(int command, int value) {
     }
 
     // 5. 라이브러리 해제
-    dlclose(handle);
+    // dlclose(handle);
 }
 
 /* ★ 스레드가 실제로 진입해서 실행할 함수 ★ */
@@ -55,11 +56,13 @@ void* device_command_thread(void* arg) {
     // 1. 넘겨받은 포인터를 구조체 타입으로 캐스팅
     ThreadArgs* args = (ThreadArgs*)arg;
 
-    // 2. 실제 장치 제어 함수 호출
-    handle_device_command(args->command, args->value);
+    int cmd = args->command;
+    int val = args->value;
 
-    // 3. 동적 할당된 메모리 해제 (메모리 누수 방지)
     free(args);
+
+    // 2. 실제 장치 제어 함수 호출
+    handle_device_command(cmd, val);
 
     return NULL;
 }
