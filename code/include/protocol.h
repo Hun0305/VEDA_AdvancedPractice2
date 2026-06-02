@@ -38,4 +38,10 @@ typedef struct {
     char message[64]; // 처리 결과 메시지
 } ResponsePacket;
 
+// 스레드에게 명령어 정보를 전달하기 위한 구조체
+typedef struct {
+    int command;
+    int value;
+} ThreadArgs;
+
 #endif // PROTOCOL_H
