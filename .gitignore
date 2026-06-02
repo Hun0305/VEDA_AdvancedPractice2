@@ -1,6 +1,8 @@
 #=== Build Artifacts (실행 파일 및 바이너리 제외) ===
 *.o
 *.so
+client_app
+server_main
 
 #=== IDE & Editors (개발 도구 설정 파일 제외) ===
 .vscode/
