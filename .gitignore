@@ -3,6 +3,7 @@
 *.so
 client_app
 server_main
+server_log.txt
 
 #=== IDE & Editors (개발 도구 설정 파일 제외) ===
 .vscode/

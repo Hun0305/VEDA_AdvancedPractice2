@@ -7,6 +7,7 @@
 #include <sys/socket.h>
 #include <signal.h>
 #include "../include/protocol.h"
+#include <fcntl.h> // ★ open 함수 사용을 위해 추가
 
 // 전역 변수로 서버 소켓 핸들 선언 (시그널 핸들러에서 닫기 위함)
 int server_fd = -1;
@@ -44,6 +45,28 @@ void handle_sigint(int sig) {
 }
 
 int main() {
+    // =========================================================================
+    // ★ [데몬화 로직 추가] ★
+    // 1. daemon(1, 0) 호출
+    // - 첫 번째 인자(1): 현재 작업 디렉토리 유지 (0이면 "/"로 가서 dlopen 상대경로가 다 고장남)
+    // - 두 번째 인자(0): 표준 입출력(화면)을 닫고 /dev/null로 보냄
+    if (daemon(1, 0) == -1) {
+        perror("데몬 프로세스 전환 실패");
+        exit(EXIT_FAILURE);
+    }
+
+    // 2. 화면 출력이 끊겼으므로, printf 로그를 파일로 남기도록 방향 틀기 (Redirection)
+    int log_fd = open("server_log.txt", O_RDWR | O_CREAT | O_APPEND, 0644);
+    if (log_fd != -1) {
+        dup2(log_fd, STDOUT_FILENO); // 기존 화면 출력(printf)을 파일로 연결
+        dup2(log_fd, STDERR_FILENO); // 기존 에러 출력(perror)을 파일로 연결
+        close(log_fd);
+        
+        // 파일에 즉시 쓰이도록 버퍼링 비활성화
+        setvbuf(stdout, NULL, _IONBF, 0); 
+        setvbuf(stderr, NULL, _IONBF, 0);
+    }
+
     int client_fd;
     struct sockaddr_in server_addr, client_addr;
     socklen_t client_addr_len = sizeof(client_addr);
@@ -51,6 +74,7 @@ int main() {
 
     // 1. 시그널 핸들러 등록 (인터럽트 전까지 무한 실행 보장)
     signal(SIGINT, handle_sigint);
+    signal(SIGTERM, handle_sigint); // ★ 데몬은 kill 명령(SIGTERM)으로 죽이므로 이것도 추가!
     signal(SIGPIPE, SIG_IGN);
 
     // 2. 서버 리슨 소켓 생성
