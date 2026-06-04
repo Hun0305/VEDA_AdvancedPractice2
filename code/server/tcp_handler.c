@@ -25,7 +25,7 @@ void handle_device_command(int command, int value) {
     }
 
     // ★ 9번 STOP 명령이 왔을 때 FND 라이브러리를 열어서 중단 신호를 보내도록 추가
-    else if (command == CMD_SEGMENT_STOP) {
+    else if (command == CMD_SEGMENT_STOP || command == CMD_SEGMENT_INC) {
         lib_path = "exec/lib/libfnd.so"; 
     }
 

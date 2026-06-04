@@ -15,6 +15,8 @@
 
 // 카운트다운을 중간에 멈추기 위한 전역 플래그
 volatile int fnd_running = 0;
+static int current_fnd_count = 0; // 현재 카운트된 숫자를 기억할 변수
+static int is_fnd_init = 0;       // 중복 초기화(화면 깜빡임) 방지 플래그
 
 // 숫자를 이진수(BCD)로 변환하여 4개의 핀에 출력하는 헬퍼 함수
 void display_number(int num) {
@@ -25,15 +27,17 @@ void display_number(int num) {
 }
 
 int device_init(void) {
-    if (wiringPiSetup() == -1) return -1;
-    
-    pinMode(FND_A, OUTPUT);
-    pinMode(FND_B, OUTPUT);
-    pinMode(FND_C, OUTPUT);
-    pinMode(FND_D, OUTPUT);
-    
-    // 74LS47 칩은 15(1111)를 입력하면 모든 불빛이 꺼집니다(Blanking). 초기화 시 화면 소등.
-    display_number(15); 
+    if (!is_fnd_init) {
+        if (wiringPiSetup() == -1) return -1;
+        
+        pinMode(FND_A, OUTPUT);
+        pinMode(FND_B, OUTPUT);
+        pinMode(FND_C, OUTPUT);
+        pinMode(FND_D, OUTPUT);
+        
+        display_number(15); // 74LS47 칩은 15(1111)를 입력하면 모든 불빛이 꺼집니다(Blanking). 초기화 시 화면 소등.
+        is_fnd_init = 1; // 처음 한 번만 초기화 세팅을 수행
+    }
     return 0;
 }
 
@@ -65,12 +69,21 @@ int device_control(int command, int value) {
         fnd_running = 0;    // 진행 중인 카운트다운 루프 정지
         display_number(15); // 화면 불빛 완전히 끄기
     }
+
+    else if (command == CMD_SEGMENT_INC) {
+        // 9를 넘어가면 0으로 초기화
+        current_fnd_count++;
+        if (current_fnd_count > 9) current_fnd_count = 0;
+        
+        display_number(current_fnd_count);
+        printf("[FND] 수동 카운트: %d\n", current_fnd_count);
+    }
     
     return 0; // 정상 종료(도중에 멈춤) 시 0 리턴
 }
 
 int device_release(void) {
     fnd_running = 0;
-    display_number(15);
+    // display_number(15);
     return 0;
 }

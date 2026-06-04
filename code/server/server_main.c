@@ -51,6 +51,7 @@ int main() {
 
     // 1. 시그널 핸들러 등록 (인터럽트 전까지 무한 실행 보장)
     signal(SIGINT, handle_sigint);
+    signal(SIGPIPE, SIG_IGN);
 
     // 2. 서버 리슨 소켓 생성
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -155,6 +156,10 @@ int main() {
                         break;
                     case CMD_SEGMENT_STOP:
                         printf("7세그먼트 카운트다운 중단 명령\n");
+                        myThreadCreate(packet.command, packet.value, client_fd);
+                        break;
+                    case CMD_SEGMENT_INC:
+                        printf("7세그먼트 수동 카운트 증가 명령\n");
                         myThreadCreate(packet.command, packet.value, client_fd);
                         break;
                     default:

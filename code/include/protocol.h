@@ -16,6 +16,7 @@
 #define CMD_SENSOR_OFF    7
 #define CMD_SEGMENT_DISP  8
 #define CMD_SEGMENT_STOP  9
+#define CMD_SEGMENT_INC   10
 
 // LED 밝기 상세 값 (CMD_SET_BRIGHT 선택 시 value에 담길 값)
 #define BRIGHT_LOW        1

@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/select.h>
+#include <signal.h>
 #include "../include/protocol.h"
 
 // 메뉴판을 깔끔하게 띄우기 위한 함수
@@ -19,6 +20,7 @@ void print_menu() {
         printf("7. SENSOR OFF (감시 종료)\n");
         printf("8. SEGMENT DISPLAY (숫자 표시 후 카운트다운)\n");
         printf("9. SEGMENT STOP (카운트다운 중단)\n");
+        printf("+ 10. SEGMENT INC (수동 카운트 증가)\n");
         printf("0. Exit\n");
         printf("Select: ");
     fflush(stdout);
@@ -30,6 +32,8 @@ int main() {
     DevicePacket packet;
     int choice;
     int sensor_mode = 0; // 센서 감시가 켜져있는지 확인하는 플래그
+
+    signal(SIGPIPE, SIG_IGN);
 
     sock_fd = socket(AF_INET, SOCK_STREAM, 0);
     memset(&server_addr, 0, sizeof(server_addr));
@@ -87,17 +91,37 @@ int main() {
         // 2. 사용자가 키보드로 숫자를 입력한 경우
         // ----------------------------------------------------
         if (FD_ISSET(STDIN_FILENO, &read_fds)) {
-            if (scanf("%d", &choice) == 1) {
+            char input_buf[128];
+            
+            // fgets로 한 줄을 통째로 읽어옵니다.
+            if (fgets(input_buf, sizeof(input_buf), stdin) != NULL) {
+                
+                // ★ 엔터키(\n)만 눌렸는지 확인합니다!
+                if (input_buf[0] == '\n') {
+                    choice = 10; // CMD_SEGMENT_INC
+                } 
+                // 엔터키가 아니라면 정상적인 숫자인지 확인합니다.
+                else if (sscanf(input_buf, "%d", &choice) == 1) {
+                    // 정상 숫자가 choice 변수에 들어감
+                } 
+                else {
+                    printf("숫자를 입력하거나 그냥 엔터를 누르세요.\n");
+                    if (!sensor_mode) print_menu();
+                    continue;
+                }
+
                 packet.command = choice;
                 packet.value = 0;
 
-                // 추가 입력이 필요한 명령어 처리
+                // 추가 입력 처리
                 if (choice == 3) {
                     printf("밝기 단계를 입력하세요 (1:최저, 2:중간, 3:최대): ");
                     scanf("%d", &packet.value);
+                    while(getchar() != '\n'); // 남은 버퍼 청소
                 } else if (choice == 8) {
                     printf("시작할 숫자(0~9)를 입력하세요: ");
                     scanf("%d", &packet.value);
+                    while(getchar() != '\n'); // 남은 버퍼 청소
                 }
 
                 // 0번 종료 처리
@@ -107,29 +131,22 @@ int main() {
                     break;
                 }
                 
-                // 센서 UI 상태 업데이트
                 if (choice == 6) sensor_mode = 1;
                 if (choice == 7) sensor_mode = 0;
 
-                // 유효한 명령어 전송
-                if (choice >= 1 && choice <= 9) {
+                // 유효한 명령어 전송 (이제 10번까지 허용해야 합니다!)
+                if (choice >= 1 && choice <= 10) {
                     send(sock_fd, &packet, sizeof(packet), 0);
                     
-                    // 센서 감시 중이 아니라면, 전송 완료 후 메뉴판을 다시 예쁘게 그려줍니다.
                     if (!sensor_mode) {
-                        printf(">> %d번 명령어 전송 완료.\n", choice);
+                        if (choice == 10) printf(">> 세그먼트 +1 완료\n");
+                        else printf(">> %d번 명령어 전송 완료.\n", choice);
                         print_menu(); 
                     }
                 } else {
                     printf("잘못된 입력입니다.\n");
                     if (!sensor_mode) print_menu();
                 }
-
-            } else {
-                // 숫자가 아닌 글자 입력 시 버퍼 청소
-                while(getchar() != '\n');
-                printf("숫자만 입력해주세요.\n");
-                if (!sensor_mode) print_menu();
             }
         }
     }
