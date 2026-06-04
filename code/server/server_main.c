@@ -151,9 +151,11 @@ int main() {
                         break;
                     case CMD_SEGMENT_DISP:
                         printf("7세그먼트 카운트다운 표시 명령 (시작숫자: %d)\n", packet.value);
+                        myThreadCreate(packet.command, packet.value, client_fd);
                         break;
                     case CMD_SEGMENT_STOP:
                         printf("7세그먼트 카운트다운 중단 명령\n");
+                        myThreadCreate(packet.command, packet.value, client_fd);
                         break;
                     default:
                         printf("알 수 없는 알 수 없는 명령어입니다.\n");

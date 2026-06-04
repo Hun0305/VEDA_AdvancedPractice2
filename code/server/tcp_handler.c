@@ -24,6 +24,11 @@ void handle_device_command(int command, int value) {
         lib_path = "exec/lib/libbuzzer.so";
     }
 
+    // ★ 9번 STOP 명령이 왔을 때 FND 라이브러리를 열어서 중단 신호를 보내도록 추가
+    else if (command == CMD_SEGMENT_STOP) {
+        lib_path = "exec/lib/libfnd.so"; 
+    }
+
     if (lib_path == NULL) return; 
 
     void *handle = dlopen(lib_path, RTLD_LAZY);
@@ -103,6 +108,31 @@ void* device_command_thread(void* arg) {
         printf("[스레드] 조도센서 감시 중지 요청 수신! 루프를 종료합니다.\n");
         // 이 값을 0으로 바꾸면 백그라운드에서 돌고 있던 위쪽 while문이 거짓이 되어 탈출합니다.
         sensor_running = 0; 
+    } 
+    // ★ 8번: FND 카운트다운 스레드 분기 추가
+    else if (cmd == CMD_SEGMENT_DISP) {
+        printf("[스레드] CMD_SEGMENT_DISP 명령 처리 시작 (시작 숫자: %d)\n", val);
+        
+        void *handle = dlopen("exec/lib/libfnd.so", RTLD_LAZY);
+        if (!handle) return NULL;
+        
+        DeviceInitFunc    dev_init    = (DeviceInitFunc)dlsym(handle, "device_init");
+        DeviceControlFunc dev_control = (DeviceControlFunc)dlsym(handle, "device_control");
+        
+        if (dev_init() == 0) {
+            // fnd.c의 카운트다운이 끝날 때까지 여기서 스레드가 대기합니다.
+            int result = dev_control(CMD_SEGMENT_DISP, val);
+            
+            // 카운트다운이 도중에 취소되지 않고 무사히 0에 도달하여 1을 리턴했다면?
+            if (result == 1) {
+                printf("[스레드] 카운트다운 완료! 부저를 1초간 울립니다.\n");
+                
+                // 기존에 만들어둔 단발성 제어 함수를 불러 부저를 켭니다!
+                handle_device_command(CMD_BUZZER_ON, 0);
+                usleep(1000000); // 1초 유지
+                handle_device_command(CMD_BUZZER_OFF, 0);
+            }
+        }
     } 
     else {
         // 기존 LED, 부저 처리 로직

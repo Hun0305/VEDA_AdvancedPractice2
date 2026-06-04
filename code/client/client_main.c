@@ -5,7 +5,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/select.h>
-#include "protocol.h"
+#include "../include/protocol.h"
 
 // 메뉴판을 깔끔하게 띄우기 위한 함수
 void print_menu() {
