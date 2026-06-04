@@ -13,12 +13,13 @@ int server_fd = -1;
 
 void* device_command_thread(void* arg);
 
-void myThreadCreate(int command, int value) {
+void myThreadCreate(int command, int value, int client_fd) {
     // 1. 스레드에게 줄 인자 메모리를 동적 할당 (malloc)
     // ※ 그냥 지역변수로 주소를 넘기면, while루프가 돌면서 값이 바뀔 수 있어 위험합니다.
     ThreadArgs* args = (ThreadArgs*)malloc(sizeof(ThreadArgs));
     args->command = command;
     args->value = value;
+    args->client_fd = client_fd;
 
     // 2. 스레드 생성
     pthread_t thread_id;
@@ -121,25 +122,32 @@ int main() {
                         printf("클라이언트가 종료(Exit)를 요청했습니다.\n");
                         break;
                     case CMD_LED_ON:
-                    case CMD_LED_OFF:
-                    case CMD_SET_BRIGHT: {
-                        printf("LED 관련 명령 수신 (Command: %d, Value: %d)\n", packet.command, packet.value);
-                        myThreadCreate(packet.command, packet.value);
+                        printf("LED 켜기 명령\n");
+                        myThreadCreate(packet.command, packet.value, client_fd);
                         break;
-                    }
+                    case CMD_LED_OFF:
+                        printf("LED 끄기 명령\n");
+                        myThreadCreate(packet.command, packet.value, client_fd);
+                        break;
+                    case CMD_SET_BRIGHT:
+                        printf("LED 밝기 설정 명령 (밝기값: %d)\n", packet.value);
+                        myThreadCreate(packet.command, packet.value, client_fd);
+                        break;
                     case CMD_BUZZER_ON:
                         printf("부저 켜기 멜로디 재생 명령\n");
-                        myThreadCreate(packet.command, packet.value);
+                        myThreadCreate(packet.command, packet.value, client_fd);
                         break;
                     case CMD_BUZZER_OFF:
                         printf("부저 끄기 명령\n");
-                        myThreadCreate(packet.command, packet.value);
+                        myThreadCreate(packet.command, packet.value, client_fd);
                         break;
                     case CMD_SENSOR_ON:
                         printf("조도센서 감시 시작 명령\n");
+                        myThreadCreate(packet.command, packet.value, client_fd);
                         break;
                     case CMD_SENSOR_OFF:
                         printf("조도센서 감시 종료 명령\n");
+                        myThreadCreate(packet.command, packet.value, client_fd);
                         break;
                     case CMD_SEGMENT_DISP:
                         printf("7세그먼트 카운트다운 표시 명령 (시작숫자: %d)\n", packet.value);

@@ -22,6 +22,8 @@
 #define BRIGHT_MID        2
 #define BRIGHT_MAX        3
 
+#define RESP_SENSOR_DATA  100
+
 /* * 클라이언트와 서버가 주고받을 기본 데이터 패킷 구조체 
  * fixed-size 구조체로 설계하여 소켓을 통해 통째로 send/recv 하기 용이합니다.
  */
@@ -42,6 +44,12 @@ typedef struct {
 typedef struct {
     int command;
     int value;
+    int client_fd;
 } ThreadArgs;
+
+typedef struct {
+    int type;        // RESP_SENSOR_DATA
+    int light_detected; // 1: 빛 감지(밝음), 0: 빛 없음(어두움)
+} SensorResponsePacket;
 
 #endif // PROTOCOL_H
