@@ -79,9 +79,9 @@ int main() {
             if (res.type == RESP_SENSOR_DATA) {
                 // \r을 이용해 현재 줄을 덮어쓰면서 프롬프트를 유지하는 UI 해킹 기법
                 if (res.light_detected == 1) {
-                    printf("\r[SENSOR] ☀️ 빛 감지됨! (LED ON)   | 명령어 입력: ");
+                    printf("\r[SENSOR] ☀️ 조도센서 빛 감지 불가! (LED ON)   | 명령어 입력: ");
                 } else {
-                    printf("\r[SENSOR] 🌑 어두움 (LED OFF)      | 명령어 입력: ");
+                    printf("\r[SENSOR] 🌑 조도센서 빛 감지 (LED OFF)      | 명령어 입력: ");
                 }
                 fflush(stdout); 
             }

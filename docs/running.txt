@@ -1,0 +1,177 @@
+hun@5-12:/mnt/c/wsl/AdvPrac2$ ./client_app
+서버에 성공적으로 연결되었습니다.
+[ Device Control Menu ]
+1. LED ON
+2. LED OFF
+3. Set Brightness
+4. BUZZER ON (play melody)
+5. BUZZER OFF (stop)
+6. SENSOR ON (감시 시작)
+7. SENSOR OFF (감시 종료)
+8. SEGMENT DISPLAY (숫자 표시 후 카운트다운)
+9. SEGMENT STOP (카운트다운 중단)
++ 10. SEGMENT INC (수동 카운트 증가)
+0. Exit
+Select: 1
+>> 1번 명령어 전송 완료.
+[ Device Control Menu ]
+1. LED ON
+2. LED OFF
+3. Set Brightness
+4. BUZZER ON (play melody)
+5. BUZZER OFF (stop)
+6. SENSOR ON (감시 시작)
+7. SENSOR OFF (감시 종료)
+8. SEGMENT DISPLAY (숫자 표시 후 카운트다운)
+9. SEGMENT STOP (카운트다운 중단)
++ 10. SEGMENT INC (수동 카운트 증가)
+0. Exit
+Select: 2
+>> 2번 명령어 전송 완료.
+[ Device Control Menu ]
+1. LED ON
+2. LED OFF
+3. Set Brightness
+4. BUZZER ON (play melody)
+5. BUZZER OFF (stop)
+6. SENSOR ON (감시 시작)
+7. SENSOR OFF (감시 종료)
+8. SEGMENT DISPLAY (숫자 표시 후 카운트다운)
+9. SEGMENT STOP (카운트다운 중단)
++ 10. SEGMENT INC (수동 카운트 증가)
+0. Exit
+Select: 3
+밝기 단계를 입력하세요 (1:최저, 2:중간, 3:최대): 1
+>> 3번 명령어 전송 완료.
+[ Device Control Menu ]
+1. LED ON
+2. LED OFF
+3. Set Brightness
+4. BUZZER ON (play melody)
+5. BUZZER OFF (stop)
+6. SENSOR ON (감시 시작)
+7. SENSOR OFF (감시 종료)
+8. SEGMENT DISPLAY (숫자 표시 후 카운트다운)
+9. SEGMENT STOP (카운트다운 중단)
++ 10. SEGMENT INC (수동 카운트 증가)
+0. Exit
+Select: 3
+밝기 단계를 입력하세요 (1:최저, 2:중간, 3:최대): 3
+>> 3번 명령어 전송 완료.
+[ Device Control Menu ]
+1. LED ON
+2. LED OFF
+3. Set Brightness
+4. BUZZER ON (play melody)
+5. BUZZER OFF (stop)
+6. SENSOR ON (감시 시작)
+7. SENSOR OFF (감시 종료)
+8. SEGMENT DISPLAY (숫자 표시 후 카운트다운)
+9. SEGMENT STOP (카운트다운 중단)
++ 10. SEGMENT INC (수동 카운트 증가)
+0. Exit
+Select: 4
+>> 4번 명령어 전송 완료.
+[ Device Control Menu ]
+1. LED ON
+2. LED OFF
+3. Set Brightness
+4. BUZZER ON (play melody)
+5. BUZZER OFF (stop)
+6. SENSOR ON (감시 시작)
+7. SENSOR OFF (감시 종료)
+8. SEGMENT DISPLAY (숫자 표시 후 카운트다운)
+9. SEGMENT STOP (카운트다운 중단)
++ 10. SEGMENT INC (수동 카운트 증가)
+0. Exit
+Select: 5
+>> 5번 명령어 전송 완료.
+[ Device Control Menu ]
+1. LED ON
+2. LED OFF
+3. Set Brightness
+4. BUZZER ON (play melody)
+5. BUZZER OFF (stop)
+6. SENSOR ON (감시 시작)
+7. SENSOR OFF (감시 종료)
+8. SEGMENT DISPLAY (숫자 표시 후 카운트다운)
+9. SEGMENT STOP (카운트다운 중단)
++ 10. SEGMENT INC (수동 카운트 증가)
+0. Exit
+Select: 6
+[SENSOR] 🌑 조도센서 빛 감지 (LED OFF)      | 명령어 입력: 7[[D
+숫자를 입력하거나 그냥 엔터를 누르세요.
+[SENSOR] 🌑 조도센서 빛 감지 (LED OFF)      | 명령어 입력: 7
+>> 7번 명령어 전송 완료.
+[ Device Control Menu ]
+1. LED ON
+2. LED OFF
+3. Set Brightness
+4. BUZZER ON (play melody)
+5. BUZZER OFF (stop)
+6. SENSOR ON (감시 시작)
+7. SENSOR OFF (감시 종료)
+8. SEGMENT DISPLAY (숫자 표시 후 카운트다운)
+9. SEGMENT STOP (카운트다운 중단)
++ 10. SEGMENT INC (수동 카운트 증가)
+0. Exit
+Select: 8
+시작할 숫자(0~9)를 입력하세요: 9
+>> 8번 명령어 전송 완료.
+[ Device Control Menu ]
+1. LED ON
+2. LED OFF
+3. Set Brightness
+4. BUZZER ON (play melody)
+5. BUZZER OFF (stop)
+6. SENSOR ON (감시 시작)
+7. SENSOR OFF (감시 종료)
+8. SEGMENT DISPLAY (숫자 표시 후 카운트다운)
+9. SEGMENT STOP (카운트다운 중단)
++ 10. SEGMENT INC (수동 카운트 증가)
+0. Exit
+Select: 9
+>> 9번 명령어 전송 완료.
+[ Device Control Menu ]
+1. LED ON
+2. LED OFF
+3. Set Brightness
+4. BUZZER ON (play melody)
+5. BUZZER OFF (stop)
+6. SENSOR ON (감시 시작)
+7. SENSOR OFF (감시 종료)
+8. SEGMENT DISPLAY (숫자 표시 후 카운트다운)
+9. SEGMENT STOP (카운트다운 중단)
++ 10. SEGMENT INC (수동 카운트 증가)
+0. Exit
+Select: 10
+>> 세그먼트 +1 완료
+[ Device Control Menu ]
+1. LED ON
+2. LED OFF
+3. Set Brightness
+4. BUZZER ON (play melody)
+5. BUZZER OFF (stop)
+6. SENSOR ON (감시 시작)
+7. SENSOR OFF (감시 종료)
+8. SEGMENT DISPLAY (숫자 표시 후 카운트다운)
+9. SEGMENT STOP (카운트다운 중단)
++ 10. SEGMENT INC (수동 카운트 증가)
+0. Exit
+Select: 10
+>> 세그먼트 +1 완료
+[ Device Control Menu ]
+1. LED ON
+2. LED OFF
+3. Set Brightness
+4. BUZZER ON (play melody)
+5. BUZZER OFF (stop)
+6. SENSOR ON (감시 시작)
+7. SENSOR OFF (감시 종료)
+8. SEGMENT DISPLAY (숫자 표시 후 카운트다운)
+9. SEGMENT STOP (카운트다운 중단)
++ 10. SEGMENT INC (수동 카운트 증가)
+0. Exit
+Select: 0
+
+프로그램을 종료합니다.
